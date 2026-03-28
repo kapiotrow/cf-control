@@ -1,0 +1,19 @@
+uav_model_node:
+  ros__parameters:
+    mass: 1.2
+    gravity: 9.81
+
+    arm_length: 0.23
+
+    kf: 1.1
+    km: 0.024
+
+    thrust_min: 0.0
+    thrust_max: 12.0
+
+    dt: 0.002
+
+    # Inertia matrix — flat row-major 3x3: [Jxx, Jxy, Jxz, Jyx, Jyy, Jyz, Jzx, Jzy, Jzz]
+    J: [0.018, 0.0,   0.0,
+        0.0,   0.018, 0.0,
+        0.0,   0.0,   0.035]
