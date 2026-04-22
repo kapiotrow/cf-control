@@ -1,0 +1,35 @@
+mellinger_controller:
+  ros__parameters:
+
+    # Control loop frequency [Hz]
+    control_rate: 200.0
+
+    # UAV physical parameters — must match the simulated drone
+    # CrazyFlie 2.x: 27 g body + ~5 g propellers ≈ 0.032 kg total
+    mass: 0.032
+    gravity: 9.81
+    thrust_min: 0.0
+    thrust_max: 0.58   # 4 motors × ~0.145 N each at max RPM
+
+    # Inertia matrix — flat row-major 3x3 (CrazyFlie 2.x values, kg·m²)
+    J: [1.4e-5, 0.0,   0.0,
+        0.0,   1.4e-5, 0.0,
+        0.0,   0.0,   2.17e-5]
+
+    # Position gains [N/m]
+    # Rule of thumb: kp * e_max + m*g must stay below thrust_max (0.58 N).
+    # With e_max ≈ 1.5 m and m*g ≈ 0.314 N, kp_z ≤ (0.58-0.314)/1.5 ≈ 0.18 N/m.
+    kp_xy: 0.08
+    kp_z:  0.12
+
+    # Velocity gains [N·s/m]  (sized for critical damping: kv = 2*sqrt(kp*m))
+    kv_xy: 0.10
+    kv_z:  0.13
+
+    # Rotation error gains [Nm/rad]  (ω_n_att ≈ 10 rad/s → kR = ω_n²·J)
+    kR_xy: 1.5e-3
+    kR_z:  5.0e-4
+
+    # Angular-rate error gains [Nm·s/rad]  (critical: komega = 2·ω_n·J)
+    komega_xy: 2.0e-4
+    komega_z:  2.0e-4

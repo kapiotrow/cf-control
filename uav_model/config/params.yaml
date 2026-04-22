@@ -1,19 +1,19 @@
 uav_model_node:
   ros__parameters:
-    mass: 1.2
+    mass: 0.032
     gravity: 9.81
 
-    arm_length: 0.23
+    arm_length: 0.046
 
-    kf: 1.1
-    km: 0.024
+    kf: 1.28192e-08
+    km: 8.06428e-05
 
     thrust_min: 0.0
-    thrust_max: 12.0
+    thrust_max: 0.58
 
     dt: 0.002
 
-    # Inertia matrix — flat row-major 3x3: [Jxx, Jxy, Jxz, Jyx, Jyy, Jyz, Jzx, Jzy, Jzz]
-    J: [0.018, 0.0,   0.0,
-        0.0,   0.018, 0.0,
-        0.0,   0.0,   0.035]
+    # Inertia matrix — flat row-major 3x3 (CrazyFlie 2.x, kg·m²)
+    J: [1.4e-5, 0.0,   0.0,
+        0.0,   1.4e-5, 0.0,
+        0.0,   0.0,   2.17e-5]

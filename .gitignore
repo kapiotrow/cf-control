@@ -1,6 +1,11 @@
 # ROS
 logs/
 rosbags/
+log/
 
 # Python
 __pycache__/
+build/
+
+# other
+CLAUDE.md

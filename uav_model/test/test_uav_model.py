@@ -45,6 +45,7 @@ def dyn_params(default_params):
 # ---------------------------------------------------------------------------
 
 class TestUAVState:
+
     def test_default_is_identity(self):
         s = UAVState()
         assert np.allclose(s.r, [0, 0, 0])
@@ -87,6 +88,7 @@ class TestUAVState:
 # ---------------------------------------------------------------------------
 
 class TestUAVParameters:
+
     def test_hover_thrust(self):
         p = UAVParameters()
         assert np.isclose(p.hover_thrust(), p.mass * p.gravity / 4.0)
@@ -126,6 +128,7 @@ class TestUAVParameters:
 # ---------------------------------------------------------------------------
 
 class TestDynamics:
+
     def test_gravity_only(self, dyn_params):
         """Zero thrust, level attitude → vertical acceleration = -g."""
         x = UAVState().as_vector()
@@ -170,6 +173,7 @@ class TestDynamics:
 # ---------------------------------------------------------------------------
 
 class TestRK4Integrator:
+
     def test_free_fall_matches_analytical(self, dyn_params):
         """z(t) = -½ g t² for zero thrust, level attitude."""
         integrator = RK4Integrator(dynamics)
@@ -201,6 +205,7 @@ class TestRK4Integrator:
 # ---------------------------------------------------------------------------
 
 class TestQuadMotorModel:
+
     def test_equal_speeds_zero_torque(self):
         model = QuadMotorModel(arm_length=0.25, kf=1.0, km=0.02)
         T, tau = model.map_to_forces([1.0, 1.0, 1.0, 1.0])
@@ -228,6 +233,7 @@ class TestQuadMotorModel:
 # ---------------------------------------------------------------------------
 
 class TestUAVModelNode:
+
     def test_node_created(self, node):
         assert node is not None
         assert node.get_name() == 'uav_model_node'

@@ -16,7 +16,6 @@ def quat_to_rot(q):
 
 def dynamics(x, u, p):
 
-    r = x[0:3]
     v = x[3:6]
     q = x[6:10]
     w = x[10:13]

@@ -11,6 +11,7 @@ from uav_model.integrator import RK4Integrator
 
 
 class UAVModelNode(Node):
+
     def __init__(self):
         super().__init__('uav_model_node')
 

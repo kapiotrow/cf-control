@@ -2,6 +2,7 @@ import numpy as np
 
 
 class UAVParameters:
+
     def __init__(self):
 
         # -------- Physical parameters --------

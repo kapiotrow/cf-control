@@ -1,4 +1,5 @@
 class RK4Integrator:
+
     def __init__(self, dynamics_function):
         self.f = dynamics_function
 

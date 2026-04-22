@@ -29,5 +29,6 @@
         }
     },
     "ruff.lineLength": 99,
-    "terminal.integrated.suggest.enabled": false
+    "terminal.integrated.suggest.enabled": false,
+    "cmake.ignoreCMakeListsMissing": true
 }

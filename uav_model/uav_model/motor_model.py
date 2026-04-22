@@ -2,6 +2,7 @@ import numpy as np
 
 
 class QuadMotorModel:
+
     def __init__(self, arm_length, kf, km, thrust_min=0.0, thrust_max=15.0):
         self.L = arm_length
         self.kf = kf
