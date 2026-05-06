@@ -131,8 +131,8 @@ class MellingerController:
         R = quat_to_rot(state.q)
         z_B = R[:, 2]
 
-        # Desired rotation matrix
-        R_des = quat_to_rot(ref_state.q)
+        # Reference rotation from trajectory (feedforward only, for a_ref and yaw extraction)
+        R_ref = quat_to_rot(ref_state.q)
 
         # ------------------------------------------------------------------
         # Position loop
@@ -140,13 +140,41 @@ class MellingerController:
         e_r = state.r - ref_state.r
         e_v = state.v - ref_state.v
 
-        # Feedforward acceleration: back-compute from ref_thrust and z_B_des
-        a_ref = ref_thrust / m * R_des[:, 2] - gravity * self._GRAVITY_DIR
+        # Feedforward acceleration: back-compute from ref_thrust along reference z
+        a_ref = ref_thrust / m * R_ref[:, 2] - gravity * self._GRAVITY_DIR
 
         f_des = -g.kp * e_r - g.kv * e_v + m * gravity * self._GRAVITY_DIR + m * a_ref
 
-        # Thrust is the projection of f_des onto the current body z-axis
+        # Thrust is the projection of total desired force onto the current body z-axis
         thrust = float(np.dot(f_des, z_B))
+
+        # ------------------------------------------------------------------
+        # Reconstruct R_des from f_des + desired yaw (Mellinger §IV-B)
+        # ------------------------------------------------------------------
+        # Desired body z: direction of total desired force (includes position feedback)
+        f_des_norm = float(np.linalg.norm(f_des))
+        if f_des_norm < 1e-6:
+            z_B_des = np.array([0.0, 0.0, 1.0])
+        else:
+            z_B_des = f_des / f_des_norm
+
+        # Extract desired yaw from reference quaternion [w, x, y, z]
+        qw, qx, qy, qz = ref_state.q
+        yaw_des = np.arctan2(2.0 * (qw * qz + qx * qy),
+                             1.0 - 2.0 * (qy * qy + qz * qz))
+        x_c = np.array([np.cos(yaw_des), np.sin(yaw_des), 0.0])
+
+        # Build desired rotation matrix column-by-column
+        y_B_des = np.cross(z_B_des, x_c)
+        y_B_des_norm = float(np.linalg.norm(y_B_des))
+        if y_B_des_norm < 1e-6:
+            # Near-vertical degenerate case: fall back to reference y-column
+            y_B_des = np.cross(z_B_des, R_ref[:, 1])
+            y_B_des = y_B_des / np.linalg.norm(y_B_des)
+        else:
+            y_B_des = y_B_des / y_B_des_norm
+        x_B_des = np.cross(y_B_des, z_B_des)
+        R_des = np.column_stack([x_B_des, y_B_des, z_B_des])
 
         # ------------------------------------------------------------------
         # Attitude loop
